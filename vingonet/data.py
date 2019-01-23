@@ -4,17 +4,19 @@ import cv2
 import torch
 from torch import nn
 from torchvision.transforms import ToTensor
+from math import ceil
 
 
 class TrainDataloader:
     def __init__(self, data_path, augmentations,
-                 image_size=(224, 244), bacth_size=32,
+                 image_size=(224, 244), batch_size=32,
                  hard_negative=False):
         self.image_size = image_size
         self.files = glob.glob(data_path + "/*.jpg")
         self.augmentations = augmentations
         self.to_tensor = ToTensor()
         self.curent_batch = 0
+        self.batch_size = batch_size
 
     def load_image(self, image_path, augment=True):
         image = cv2.imread(image_path)
@@ -32,15 +34,16 @@ class TrainDataloader:
         anchor_path = self.files[indx]
         negative_path = choice(self.files)
 
-        anchor = load_image(anchor_path, augment=False)
-        positive = load_image(anchor_path, augment=True)
-        negative = load_image(negative_path, augment=True)
+        anchor = self.load_image(anchor_path, augment=False)
+        positive = self.load_image(anchor_path, augment=True)
+        negative = self.load_image(negative_path, augment=True)
 
         return anchor, positive, negative
 
     def get_batch(self):
-        start = self.curent_batch * self.bacth_size
-        end = (self.curent_batch+1) * self.bacth_size
+        start = self.curent_batch * self.batch_size
+        end = (self.curent_batch+1) * self.batch_size
+        end = min(end, len(self.files)-1)
 
         anchor = []
         positive = []
@@ -56,17 +59,11 @@ class TrainDataloader:
         return anchor, positive, negative
 
     def __len__(self):
-        return len(self.files)
+        return ceil(len(self.files) / self.batch_size)
 
     def __iter__(self):
         self.curent_batch = 0
         return self
 
     def __next__(self):
-        pass
-
-
-
-class TestDataloader:
-    def __init__(self):
-        pass
+        return self.get_batch()

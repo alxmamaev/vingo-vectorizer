@@ -1,6 +1,9 @@
 import torch
 from torch import nn
 from torch.nn import functional as F
+from .validation import validate
+from tqdm import tqdm
+from tensorboardX import SummaryWriter
 
 class Trainer:
     def __init__(self, model, device="cpu", lr=1e-4):
@@ -15,7 +18,7 @@ class Trainer:
         anchor, positive, negative = batch
         anchor, positive, negative = anchor.to(self.device), positive.to(self.device), negative.to(self.device)
 
-        a_vectors = self.model(tokens)
+        a_vectors = self.model(anchor)
         p_vectors = self.model(positive)
         n_vectors = self.model(negative)
 
@@ -32,7 +35,7 @@ class Trainer:
 
     def train(self, dloader, n_epoch=5,
               checkpoint_dir="./", checkpoint_rate=-1,
-              log_dir=None):
+              log_dir=None, validation_rate=100, val_dataset_path=('keys', 'queries')):
         tqdm.write("Start training...")
 
         writer = SummaryWriter(log_dir=log_dir)
@@ -44,7 +47,7 @@ class Trainer:
 
             bar = tqdm(dloader)
             for i, batch in enumerate(bar):
-                out = self.train_batch(batch)
+                out = self.step(batch)
                 loss += out["loss"]
                 writer.add_scalar('train_loss', out["loss"], n_iter)
 
@@ -58,7 +61,18 @@ class Trainer:
                                (epoch, i, out["loss"]))
                     print("Checkpoint saved")
 
+
+                if validation_rate > 0 and i % validation_rate == 0 and i != 0:
+                    print("Validate..")
+                    val_score = validate(self.model, self.device, val_dataset_path[0], val_dataset_path[1])
+                    writer.add_scalar('val_score', val_score, n_iter)
+
                 n_iter += 1
+
+            if validation_rate > 0 and  i % validation_rate != 0:
+                print("Validate..")
+                val_score = validate(self.model, self.device, val_dataset_path[0], val_dataset_path[1])
+                writer.add_scalar('val_score', val_score, n_iter)
 
             print("Save epoch final checkpoint...")
             torch.save(self.model.state_dict(),

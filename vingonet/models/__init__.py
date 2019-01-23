@@ -1,1 +1,2 @@
-from maxpool_model import VingoNetMaxPool
+from .MobilenetMAC import MobilenetMAC
+from .MobilenetSPoC import MobilenetSPoC

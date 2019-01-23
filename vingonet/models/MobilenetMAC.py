@@ -1,7 +1,7 @@
 import torch
 from torch import nn
 from torch.nn import functional as F
-from MobileNetV2 import MobileNetV2
+from .MobileNetV2 import MobileNetV2
 
 
 class MobilenetMAC(nn.Module):
@@ -14,7 +14,7 @@ class MobilenetMAC(nn.Module):
         super().__init__()
         self.features = MobileNetV2().features
 
-    def forward(X):
+    def forward(self, X):
         out = self.features(X)
         out = out.max(2)[0].max(2)[0]
         out = F.normalize(out)
