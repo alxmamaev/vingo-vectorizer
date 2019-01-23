@@ -23,7 +23,7 @@ class TrainDataloader:
         image = cv2.resize(image, (600, 600))
 
         if augment:
-            image = self.augmentations(image)
+            image = self.augmentations(image=image)["image"]
 
         image = cv2.resize(image, self.image_size)
         image = self.to_tensor(image)

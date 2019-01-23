@@ -1,3 +1,4 @@
+import argparse
 import torch
 from vingonet.models import MobilenetMAC, MobilenetSPoC
 from vingonet.models.MobileNetV2 import MobileNetV2
@@ -45,14 +46,14 @@ def get_model(mobilenet_weights_path=None):
     model = MobilenetMAC()
     if mobilenet_weights_path is not None:
         state_dict = torch.load(mobilenet_weights_path, map_location="cpu")
-        mobilenet = MobileNetV2.MobileNetV2()
+        mobilenet = MobileNetV2()
         mobilenet.load_state_dict(state_dict)
         model.features = mobilenet.features
 
     return model
 
 def get_dataloader(datapath, augmentations, batch_size):
-    dataloader = TrainDataloader(datapath, augmentations. batch_size=batch_size)
+    dataloader = TrainDataloader(datapath, augmentations, batch_size=batch_size)
 
     return dataloader
 
@@ -65,15 +66,12 @@ def train(trainer, dataloader, n_epoch, checkpoint_dir, checkpoint_rate,
           validaton_rate, validation_keys, validation_queries):
     trainer.train(dataloader, n_epoch=n_epoch,
                   checkpoint_dir=checkpoint_dir, checkpoint_rate=checkpoint_rate,
-                  validaton_rate=validaton_rate, val_dataset_path=(validation_keys, validation_queries))
-
+                  validation_rate=validaton_rate, val_dataset_path=(validation_keys, validation_queries))
 
 def parse():
     parser = argparse.ArgumentParser(description="Program generate sencepiece tokenizer and embedings from your text")
     parser.add_argument("--datapath", type=str, dest="datapath",
                         help="Path to train dataset", default=None)
-    parser.add_argument("--batch-size", type=int, dest="batch_size",
-                        help="Batch size", default=10)
     parser.add_argument("--n-epoch", type=int, dest="n_epoch",
                         help="Number of epoch", default=10)
     parser.add_argument("--batch-size", type=int, dest="batch_size",
@@ -92,6 +90,8 @@ def parse():
                         help="path to validation keys", default=None)
     parser.add_argument("--validation-queries", type=str, dest="validation_queries",
                             help="path to validation queries", default=None)
+    parser.add_argument("--mobilenet-weights", type=str, dest="mobilenet_weights",
+                            help="pretrained mobilenet weights", default=None)
     args = parser.parse_args()
 
     return args
@@ -101,9 +101,9 @@ if __name__ == "__main__":
 
     augmentations = get_augmentations()
     dataloader = get_dataloader(args.datapath, augmentations, args.batch_size)
-    model = get_model(args.mobilenet_weitghts)
+    model = get_model(args.mobilenet_weights)
     trainer = get_trainer(model, args.device)
 
     train(trainer, dataloader, args.n_epoch, args.checkpoint_dir,
           args.checkpoint_rate, args.validation_rate,
-          (args.validation_keys, args.validation_queries))
+          args.validation_keys, args.validation_queries)
