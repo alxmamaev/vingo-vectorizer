@@ -24,7 +24,7 @@ def get_augmentations(p=1.0):
             MedianBlur(blur_limit=3, p=0.6),
             Blur(blur_limit=3, p=0.6),
         ], p=1),
-        ShiftScaleRotate(shift_limit=0.0625, scale_limit=0.2, rotate_limit=45, p=0.9),
+        ShiftScaleRotate(shift_limit=0.0825, scale_limit=0.3, rotate_limit=60, p=1),
         OneOf([
             OpticalDistortion(p=0.5),
             GridDistortion(p=.4),
@@ -35,7 +35,7 @@ def get_augmentations(p=1.0):
             IAASharpen(),
             IAAEmboss(),
             RandomBrightnessContrast(),
-        ], p=0.7),
+        ], p=0.9),
         HueSaturationValue(p=0.3),
     ], p=p)
 
