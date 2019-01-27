@@ -57,8 +57,8 @@ def get_dataloader(datapath, augmentations, batch_size):
 
     return dataloader
 
-def get_trainer(model, device):
-    trainer = Trainer(model, device=device)
+def get_trainer(model, device, lr):
+    trainer = Trainer(model, device=device, lr=lr)
 
     return trainer
 
@@ -92,6 +92,8 @@ def parse():
                             help="path to validation queries", default=None)
     parser.add_argument("--mobilenet-weights", type=str, dest="mobilenet_weights",
                             help="pretrained mobilenet weights", default=None)
+    parser.add_argument("--lr", type=float, dest="lr",
+                            help="learning rate", default=1e-3)
     args = parser.parse_args()
 
     return args
@@ -102,7 +104,7 @@ if __name__ == "__main__":
     augmentations = get_augmentations()
     dataloader = get_dataloader(args.datapath, augmentations, args.batch_size)
     model = get_model(args.mobilenet_weights)
-    trainer = get_trainer(model, args.device)
+    trainer = get_trainer(model, args.device, self.lr)
 
     train(trainer, dataloader, args.n_epoch, args.checkpoint_dir,
           args.checkpoint_rate, args.validation_rate,
