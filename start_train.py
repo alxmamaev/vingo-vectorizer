@@ -8,36 +8,34 @@ from albumentations import (
     HorizontalFlip, IAAPerspective, ShiftScaleRotate, CLAHE, RandomRotate90,
     Transpose, ShiftScaleRotate, Blur, OpticalDistortion, GridDistortion, HueSaturationValue,
     IAAAdditiveGaussianNoise, GaussNoise, MotionBlur, MedianBlur, RandomBrightnessContrast, IAAPiecewiseAffine,
-    IAASharpen, IAAEmboss, Flip, OneOf, Compose
+    IAASharpen, IAAEmboss, Flip, OneOf, Compose, RandomSizedCrop
 )
 
 
 def get_augmentations(p=1.0):
     return Compose([
-        RandomRotate90(),
-        Flip(),
-        Transpose(),
+        RandomSizedCrop((250, 600), 224, 224),
         OneOf([
             IAAAdditiveGaussianNoise(),
             GaussNoise(),
-        ], p=0.2),
+        ], p=1),
         OneOf([
-            MotionBlur(p=.2),
-            MedianBlur(blur_limit=3, p=0.1),
-            Blur(blur_limit=3, p=0.1),
-        ], p=0.2),
-        ShiftScaleRotate(shift_limit=0.0625, scale_limit=0.2, rotate_limit=45, p=0.2),
+            MotionBlur(p=.6),
+            MedianBlur(blur_limit=3, p=0.6),
+            Blur(blur_limit=3, p=0.6),
+        ], p=1),
+        ShiftScaleRotate(shift_limit=0.0625, scale_limit=0.2, rotate_limit=45, p=0.9),
         OneOf([
-            OpticalDistortion(p=0.3),
-            GridDistortion(p=.1),
-            IAAPiecewiseAffine(p=0.3),
-        ], p=0.2),
+            OpticalDistortion(p=0.5),
+            GridDistortion(p=.4),
+            IAAPiecewiseAffine(p=0.5),
+        ], p=0.8),
         OneOf([
             CLAHE(clip_limit=2),
             IAASharpen(),
             IAAEmboss(),
             RandomBrightnessContrast(),
-        ], p=0.3),
+        ], p=0.7),
         HueSaturationValue(p=0.3),
     ], p=p)
 
