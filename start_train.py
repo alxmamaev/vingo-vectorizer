@@ -104,7 +104,7 @@ if __name__ == "__main__":
     augmentations = get_augmentations()
     dataloader = get_dataloader(args.datapath, augmentations, args.batch_size)
     model = get_model(args.mobilenet_weights)
-    trainer = get_trainer(model, args.device, self.lr)
+    trainer = get_trainer(model, args.device, args.lr)
 
     train(trainer, dataloader, args.n_epoch, args.checkpoint_dir,
           args.checkpoint_rate, args.validation_rate,
