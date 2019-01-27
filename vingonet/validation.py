@@ -49,5 +49,5 @@ def validate(model, device, keys_path, queries_path):
                 labels_test.append(label)
 
     pred = knn.predict(vectors_test)
-    print("Valudation ready!")
+    print("Valudation ready!\n")
     return accuracy_score(pred, labels_test)
