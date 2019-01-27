@@ -27,7 +27,7 @@ def validate(model, device, keys_path, queries_path):
     vectors_train, labels_train = [], []
     for image_name in tqdm([i for i in os.listdir(keys_path)
                             if i.endswith(".jpg")]):
-        image = load_image(keys_path + "/" + image_name, crop=True).to(device)
+        image = load_image(keys_path + "/" + image_name, crop=False).to(device)
         with torch.no_grad():
             vector = model(image.unsqueeze(0))[0].cpu().numpy()
             vectors_train.append(vector.tolist())
