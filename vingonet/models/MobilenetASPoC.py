@@ -16,7 +16,7 @@ class MobilenetASPoC(nn.Module):
 
     def forward(self, X):
         out = self.features(X)
-        out = out * self.attention
+        out = out * F.sigmoid(self.attention)
         out = out.sum(2).sum(2)
         out = F.normalize(out)
 
