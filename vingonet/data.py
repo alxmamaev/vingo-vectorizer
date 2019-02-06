@@ -1,10 +1,12 @@
 import glob
+from math import ceil
 from random import choice
+from . import utils
 import cv2
 import torch
 from torch import nn
 from torchvision.transforms import ToTensor
-from math import ceil
+from albumentations import CenterCrop
 
 
 class TrainDataloader:
@@ -20,6 +22,9 @@ class TrainDataloader:
 
     def load_image(self, image_path, augment=True):
         image = cv2.imread(image_path)
+
+        crop_size = min(image.shape[:-1])
+        image = CenterCrop(crop_size, crop_size)(image=image)["image"]
         image = cv2.resize(image, (600, 600))
 
         if augment:
@@ -34,9 +39,9 @@ class TrainDataloader:
         anchor_path = self.files[indx]
         negative_path = choice(self.files)
 
-        anchor = self.load_image(anchor_path, augment=False)
-        positive = self.load_image(anchor_path, augment=True)
-        negative = self.load_image(negative_path, augment=True)
+        anchor = utils.load_image(anchor_path)
+        positive = utils.load_image(anchor_path, augmentations=self.augmentations)
+        negative = utils.load_image(negative_path, augmentations=self.augmentations)
 
         return anchor, positive, negative
 
