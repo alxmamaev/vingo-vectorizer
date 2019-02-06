@@ -12,10 +12,11 @@ class MobilenetASPoC(nn.Module):
         """
         super().__init__()
         self.features = MobileNetV2().features
-        self.attention = nn.Parameter(torch.torch.randn(7, 7, 1250))
+        self.attention = nn.Parameter(torch.torch.randn(1280, 7, 7))
 
     def forward(self, X):
         out = self.features(X)
+        import pdb;pdb.set_trace()
         out = out * self.attention
         out = out.sum(2).sum(2)
         out = F.normalize(out)
