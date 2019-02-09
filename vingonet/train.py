@@ -62,7 +62,7 @@ class Trainer:
                     print("Checkpoint saved")
 
 
-                if validation_rate > 0 and i % validation_rate == 0 and i != 0:
+                if validation_rate > 0 and i % validation_rate == 0:
                     print("Validate..")
                     val_score = validate(self.model, self.device, val_dataset_path[0], val_dataset_path[1])
                     writer.add_scalar('val_score', val_score, n_iter)

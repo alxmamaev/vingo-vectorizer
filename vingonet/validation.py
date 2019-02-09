@@ -30,7 +30,7 @@ def validate(model, device, keys_path, queries_path):
     vectors_test, labels_test = [], []
     for label in tqdm([i for i in os.listdir(queries_path) if os.path.isdir(queries_path + "/" + i)]):
         for image_path in glob.glob(queries_path + "/" + label + "/*.jpg"):
-            image = utils.load_image(image_path).to(device)
+            image = utils.load_image(image_path, zoom=2).to(device)
 
             with torch.no_grad():
                 vector = model(image.unsqueeze(0))[0].cpu().numpy()
