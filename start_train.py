@@ -5,18 +5,16 @@ from vingonet.models.MobileNetV2 import MobileNetV2
 from vingonet.data import TrainDataloader
 from vingonet.train import Trainer
 from albumentations import (
-    HorizontalFlip, IAAPerspective, ShiftScaleRotate, CLAHE, RandomRotate90,
-    Transpose, ShiftScaleRotate, Blur, OpticalDistortion, GridDistortion, HueSaturationValue,
-    IAAAdditiveGaussianNoise, GaussNoise, MotionBlur, MedianBlur, RandomBrightnessContrast, IAAPiecewiseAffine,
-    IAASharpen, IAAEmboss, Flip, OneOf, Compose, RandomSizedCrop
+    RandomSizedCrop, ShiftScaleRotate,
+    ChannelShuffle, RandomBrightnessContrast
+    JpegCompression, RGBShift
 )
 
 
 def get_augmentations(p=1.0):
     return Compose([
-        Resize(600, 600, p=1),
         RandomSizedCrop((100, 600), 224, 224),
-        ShiftScaleRotate(rotate_limit=60, p=.75),
+        ShiftScaleRotate(rotate_limit=90, p=.75),
         ChannelShuffle(p=0.3),
         RandomBrightnessContrast(p=0.7, brightness_limit=0.9, contrast_limit=0.9),
         JpegCompression(p=0.6, quality_lower=5),
