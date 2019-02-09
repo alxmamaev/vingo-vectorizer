@@ -14,30 +14,14 @@ from albumentations import (
 
 def get_augmentations(p=1.0):
     return Compose([
-        RandomSizedCrop((250, 600), 224, 224),
-        OneOf([
-            IAAAdditiveGaussianNoise(),
-            GaussNoise(),
-        ], p=1),
-        OneOf([
-            MotionBlur(p=.6),
-            MedianBlur(blur_limit=3, p=0.6),
-            Blur(blur_limit=3, p=0.6),
-        ], p=1),
-        ShiftScaleRotate(shift_limit=0.0825, scale_limit=0.3, rotate_limit=60, p=1),
-        OneOf([
-            OpticalDistortion(p=0.5),
-            GridDistortion(p=.4),
-            IAAPiecewiseAffine(p=0.5),
-        ], p=0.8),
-        OneOf([
-            CLAHE(clip_limit=2),
-            IAASharpen(),
-            IAAEmboss(),
-            RandomBrightnessContrast(),
-        ], p=0.9),
-        HueSaturationValue(p=0.3),
-    ], p=p)
+        Resize(600, 600, p=1),
+        RandomSizedCrop((100, 600), 224, 224),
+        ShiftScaleRotate(rotate_limit=60, p=.75),
+        ChannelShuffle(p=0.3),
+        RandomBrightnessContrast(p=0.7, brightness_limit=0.9, contrast_limit=0.9),
+        JpegCompression(p=0.6, quality_lower=5),
+        RGBShift(p=0.9)
+    ], p=1)
 
 
 def get_model(mobilenet_weights_path=None):
