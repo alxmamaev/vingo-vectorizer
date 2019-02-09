@@ -6,7 +6,7 @@ from vingonet.data import TrainDataloader
 from vingonet.train import Trainer
 from albumentations import (
     RandomSizedCrop, ShiftScaleRotate,
-    ChannelShuffle, RandomBrightnessContrast
+    ChannelShuffle, RandomBrightnessContrast,
     JpegCompression, RGBShift
 )
 
