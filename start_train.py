@@ -7,7 +7,11 @@ from vingonet.train import Trainer
 from albumentations import (
     RandomSizedCrop, ShiftScaleRotate,
     ChannelShuffle, RandomBrightnessContrast,
-    JpegCompression, RGBShift, Compose
+    JpegCompression, RGBShift, Compose, OneOf,
+    MotionBlur, MedianBlur, IAAAdditiveGaussianNoise,
+    GaussNoise, Blur, OpticalDistortion, GridDistortion,
+    IAAPiecewiseAffine, CLAHE, IAASharpen, IAAEmboss,
+    RandomBrightnessContrast, HueSaturationValue
 )
 
 
