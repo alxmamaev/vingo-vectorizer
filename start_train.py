@@ -12,7 +12,7 @@ from albumentations import (
 
 
 def get_augmentations(p=1.0):
-    return return Compose([
+    return Compose([
         RandomSizedCrop((250, 600), 224, 224),
         OneOf([
             IAAAdditiveGaussianNoise(),
