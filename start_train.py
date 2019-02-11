@@ -47,7 +47,7 @@ def get_model(mobilenet_weights_path=None):
     model = models.MobilenetMAC()
     if mobilenet_weights_path is not None:
         state_dict = torch.load(mobilenet_weights_path, map_location="cpu")
-        mobilenet = MobileNetV2()
+        mobilenet = MobilenetASPoC()
         mobilenet.load_state_dict(state_dict)
         model.features = mobilenet.features
 
