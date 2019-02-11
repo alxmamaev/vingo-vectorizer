@@ -5,7 +5,7 @@ from torch.nn import functional as F
 from .MobileNetV2 import MobileNetV2
 
 
-class MobilenetSPoC(nn.Module):
+class MobilenetASPoC(nn.Module):
     def __init__(self):
         """
         Mobilenet with Sum-pooling of Convolutions
