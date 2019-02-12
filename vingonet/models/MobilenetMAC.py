@@ -13,12 +13,15 @@ class MobilenetMAC(nn.Module):
         """
         super().__init__()
         self.features = MobileNetV2().features
+
+        for p in self.features.parameters():
+            p.requires_grad = False
+
         self.fc = nn.Linear(1280, 512)
 
     def forward(self, X):
-        with torch.no_grad():
-            out = self.features(X)
-            out = out.max(2)[0].max(2)[0]
+        out = self.features(X)
+        out = out.max(2)[0].max(2)[0]
         out = self.fc(out)
         out = F.normalize(out)
 
