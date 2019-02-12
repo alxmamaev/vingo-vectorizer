@@ -44,7 +44,7 @@ def get_augmentations(p=1.0):
 
 
 def get_model(mobilenet_weights_path=None):
-    model = models.MobilenetSPoC()
+    model = models.MobilenetConcatPooling()
     if mobilenet_weights_path is not None:
         state_dict = torch.load(mobilenet_weights_path, map_location="cpu")
         mobilenet = MobileNetV2()
